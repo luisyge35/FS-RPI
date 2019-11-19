@@ -1,10 +1,8 @@
 import struct
 DIGITAL_MAX = 32767
 DIGITAL_MIN = 0
-ANALOG_MAX = 4.5
-ANALOG_MIN = 0.5
 
-VOLTAGE_ERROR  = 100 #Error admisible entre las medidas de la pedalera
+ERROR_PERMITIDO  = 100 #Error admisible entre las medidas de la pedalera
 
 class Trama:
     def __init__(self):
@@ -14,7 +12,7 @@ class Trama:
         self.data.append(0)
         self.maximun_value = DIGITAL_MAX
         self.minimun_value = DIGITAL_MIN
-        self.error = VOLTAGE_ERROR
+        self.error = ERROR_PERMITIDO
         
     def Prepara(self,Val1,Val2):
         val_bytes = Val1.to_bytes(2,"little")
