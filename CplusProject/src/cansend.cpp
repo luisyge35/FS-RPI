@@ -1,15 +1,15 @@
 #include "candsend.h"
 
-Ccan::Ccan(sockaddr_can Can_Address)
+Ccan::Ccan(const char Can_Address)
 {
 	system("sudo /sbin/ip link set can0 up type can bitrate 500000");
-	addr = Can_Address;
+	//addr = Can_Address;
 	/* open socket */
 	if ((s = socket(PF_CAN, SOCK_RAW, CAN_RAW)) < 0)
 	{
 		throw("Error opening socket");
 	}
-	strncpy(ifr.ifr_name, addr, IFNAMSIZ - 1);
+	strncpy(ifr.ifr_name,Can_Address, IFNAMSIZ - 1);
 	ifr.ifr_name[IFNAMSIZ - 1] = '\0';
 	ifr.ifr_ifindex = if_nametoindex(ifr.ifr_name);
 	if (!ifr.ifr_ifindex)
@@ -22,19 +22,19 @@ Ccan::Ccan(sockaddr_can Can_Address)
 	addr.can_ifindex = ifr.ifr_ifindex;
 }
 
-candsend::~candsend()
+Ccan::~Ccan()
 {
 	close(s);
 }
 
-void SetFrame(int ID, int *data){
+void Ccan::SetFrame(int ID, int *data){
 	frame.can_id = ID;
 	frame.data[0] = data[0];
 	frame.data[1] = data[1];
 }
 
-void CCan::Write(int id, int* data)
-{	
+void Ccan::Write(int id, int* data)
+{
 	SetFrame(id,data);
 	/* ensure discrete CAN FD length values 0..8, 12, 16, 20, 24, 32, 64 */
 	frame.len = can_dlc2len(can_len2dlc(frame.len));
@@ -54,4 +54,3 @@ void CCan::Write(int id, int* data)
 		throw("Error in the writing");
 	}
 }
-

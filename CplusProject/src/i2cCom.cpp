@@ -7,7 +7,7 @@
 	int length;
 	unsigned char buffer[60] = {0};
 
-	
+
 	//----- OPEN THE I2C BUS -----
 	char *filename = (char*)"/dev/i2c-1";
 	if ((file_i2c = open(filename, O_RDWR)) < 0)
@@ -16,7 +16,7 @@
 		printf("Failed to open the i2c bus");
 		return;
 	}
-	
+
 	int addr = b'0101000'; //Los 3 bits menos significativos se refieren a las salidas A2 A1 A0 del ADC. Conectar los 3 a tierra
 
 	if (ioctl(file_i2c, I2C_SLAVE, addr) < 0)
@@ -25,8 +25,8 @@
 		//ERROR HANDLING; you can check errno to see what went wrong
 		return;
 	}
-	
-	
+
+
 	//----- READ BYTES -----
 	length = 2;			//<<< Number of bytes to read
 	if (read(file_i2c, buffer, length) != length)		//read() returns the number of bytes actually read, if it doesn't match then an error occurred (e.g. no response from the device)
@@ -39,7 +39,7 @@
 		printf("Data read: %s\n", buffer);
 	}
 
-	
+
 	//----- WRITE BYTES -----
 	buffer[0] = 0x01;
 	buffer[1] = 0x02;

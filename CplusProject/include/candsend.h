@@ -54,7 +54,7 @@
 #include <linux/can.h>
 #include <linux/can/raw.h>
 
-#include "lib.h"
+//#include "lib.h" Only in raspberry can-utils library
 
 class Ccan
 {
@@ -66,13 +66,10 @@ protected:
     struct sockaddr_can addr;
     struct canfd_frame frame;
     struct ifreq ifr;
+    void SetFrame(int, int*);
 
 public:
-    Ccan(sockaddr_can);
+    Ccan(const char);
     ~Ccan();
     void Write(int,int*);
 };
-
-
-
-
