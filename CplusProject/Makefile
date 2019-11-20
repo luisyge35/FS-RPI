@@ -5,7 +5,7 @@ BIN		:= bin
 SRC		:= src
 INCLUDE	:= include
 LIB		:= lib
-
+LIBS 	+= -lpthread
 LIBRARIES	:=
 
 ifeq ($(OS),Windows_NT)
