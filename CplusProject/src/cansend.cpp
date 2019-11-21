@@ -1,6 +1,6 @@
 #include "candsend.h"
 
-Ccan::Ccan(const char Can_Address)
+Ccan::Ccan(const char *Can_Address)
 {
 	system("sudo /sbin/ip link set can0 up type can bitrate 500000");
 	//addr = Can_Address;

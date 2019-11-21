@@ -54,7 +54,7 @@
 #include <linux/can.h>
 #include <linux/can/raw.h>
 
-//#include "lib.h" Only in raspberry can-utils library
+#include "lib.h" 
 
 class Ccan
 {
@@ -69,7 +69,7 @@ protected:
     void SetFrame(int, int*);
 
 public:
-    Ccan(const char);
+    Ccan(const char*);
     ~Ccan();
     void Write(int,int*);
 };
