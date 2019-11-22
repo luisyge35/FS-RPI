@@ -6,7 +6,7 @@ SRC		:= src
 INCLUDE	:= include
 LIB		:= lib
 LIBS 	+= -lpthread
-LIBRARIES	:=
+LIBRARIES	+= -lpthread
 
 ifeq ($(OS),Windows_NT)
 EXECUTABLE	:= main.exe

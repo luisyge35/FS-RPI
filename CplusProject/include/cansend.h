@@ -53,8 +53,9 @@
 #include <sys/ioctl.h>
 #include <sys/socket.h>
 
-#include <linux/can.h>
-#include <linux/can/raw.h>
+
+#include "linux/can.h"
+#include "linux/can/raw.h"
 
 #include "lib.h"
 
@@ -66,7 +67,7 @@ protected:
     int mtu;
     int enable_canfd = 1;
     struct sockaddr_can addr;
-    struct canfd_frame frame;
+    struct can_frame frame;
     struct ifreq ifr;
     void SetFrame(int, uint16_t*);
 

@@ -43,12 +43,6 @@
  */
 
 #include <stdio.h>
-#include <string.h>
-#include <stdint.h>
-
-#include <sys/socket.h> /* for sa_family_t */
-#include <linux/can.h>
-#include <linux/can/error.h>
 
 #include "lib.h"
 

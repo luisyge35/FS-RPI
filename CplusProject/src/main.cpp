@@ -1,6 +1,8 @@
 #include <iostream>
 #include <pthread.h>
-#include "candsend.h"
+
+#include "cansend.h"
+
 
 #define TS 100E6 //100ms
 
@@ -34,8 +36,8 @@ void *HiloCan(void *)
 	while (1)
 	{
 		id = 1;
-		dato[0] = 0x2;
-		dato[1] = 0x00;
+		dato[0] = 2;
+		dato[1] = 0;
 		siguiente = siguiente + intervalo;
 		pthread_mutex_lock(&cerrojo);
 		Can.Write(id, dato);
@@ -47,6 +49,7 @@ void *HiloCan(void *)
 void *HiloI2c(void *)
 {
 	//TODO
+	return nullptr;
 }
 
 int main()
@@ -62,4 +65,6 @@ int main()
 
 	pthread_join(h_can, nullptr);
 	pthread_join(h_i2c, nullptr);
+
+	return 0;
 }

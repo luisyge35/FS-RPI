@@ -4,7 +4,7 @@
 #include <linux/i2c-dev.h>		//Needed for I2C port
 
 #include <iostream>
-
+/*
 	int file_i2c;
 	int length;
 	unsigned char buffer[60] = {0};
@@ -48,8 +48,9 @@ void prueba(){
 	length = 2;			//<<< Number of bytes to write
 	if (write(file_i2c, buffer, length) != length)		//write() returns the number of bytes actually written, if it doesn't match then an error occurred (e.g. no response from the device)
 	{
-		/* ERROR HANDLING: i2c transaction failed */
+
 		cout << "Failed to write to the i2c bus.\n"<< endl;
 	}
 	return;
 }
+*/

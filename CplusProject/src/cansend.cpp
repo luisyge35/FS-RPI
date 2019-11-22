@@ -1,4 +1,4 @@
-#include "candsend.h"
+#include "cansend.h"
 
 Ccan::Ccan(const char *Can_Address)
 {
@@ -7,7 +7,6 @@ Ccan::Ccan(const char *Can_Address)
 	strcat(Kernel_message,Can_Address);
 	strcat(Kernel_message," up type can bitrate 500000");
 	//system(Kernel_message);
-	//addr = Can_Address;
 	/* open socket */
 	if ((s = socket(PF_CAN, SOCK_RAW, CAN_RAW)) < 0)
 	{
@@ -41,7 +40,7 @@ void Ccan::Write(int id, uint16_t* data)
 {
 	SetFrame(id,data);
 	/* ensure discrete CAN FD length values 0..8, 12, 16, 20, 24, 32, 64 */
-	frame.len = can_dlc2len(can_len2dlc(frame.len));
+	//frame->len = can_dlc2len(can_len2dlc(frame->len));
 	/* disable default receive filter on this RAW socket */
 	/* This is obsolete as we do not read from the socket at all, but for */
 	/* this reason we can remove the receive list in the Kernel to save a */
