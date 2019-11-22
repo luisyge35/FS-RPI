@@ -10,7 +10,7 @@ using namespace std;
 uint16_t dato[2];
 uint16_t id;
 pthread_mutex_t cerrojo;
-Ccan Can;
+Ccan Can((const char *)"vcan0");
 
 struct timespec operator+(struct timespec t1, struct timespec t2)
 {
@@ -27,15 +27,18 @@ struct timespec operator+(struct timespec t1, struct timespec t2)
 
 void *HiloCan(void *)
 {
-	struct timespec inicio, final, siguiente, intervalo;
+	struct timespec inicio, siguiente, intervalo;
 	intervalo.tv_nsec = TS;
 	clock_gettime(CLOCK_REALTIME, &siguiente);
 	inicio = siguiente;
 	while (1)
 	{
+		id = 1;
+		dato[0] = 0x2;
+		dato[1] = 0x00;
 		siguiente = siguiente + intervalo;
 		pthread_mutex_lock(&cerrojo);
-		Can.Write(id, *dato);
+		Can.Write(id, dato);
 		pthread_mutex_unlock(&cerrojo);
 		clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &siguiente, nullptr);
 	}

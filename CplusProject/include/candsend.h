@@ -47,6 +47,8 @@
 #include <string.h>
 #include <unistd.h>
 
+#include <stdint.h>
+
 #include <net/if.h>
 #include <sys/ioctl.h>
 #include <sys/socket.h>
@@ -54,7 +56,7 @@
 #include <linux/can.h>
 #include <linux/can/raw.h>
 
-#include "lib.h" 
+#include "lib.h"
 
 class Ccan
 {
@@ -66,10 +68,10 @@ protected:
     struct sockaddr_can addr;
     struct canfd_frame frame;
     struct ifreq ifr;
-    void SetFrame(int, int*);
+    void SetFrame(int, uint16_t*);
 
 public:
     Ccan(const char*);
     ~Ccan();
-    void Write(int,int*);
+    void Write(int,uint16_t*);
 };

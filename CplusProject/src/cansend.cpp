@@ -2,7 +2,11 @@
 
 Ccan::Ccan(const char *Can_Address)
 {
-	system("sudo /sbin/ip link set can0 up type can bitrate 500000");
+	char * Kernel_message;
+	Kernel_message = "sudo /sbin/ip link set ";
+	strcat(Kernel_message,Can_Address);
+	strcat(Kernel_message," up type can bitrate 500000");
+	//system(Kernel_message);
 	//addr = Can_Address;
 	/* open socket */
 	if ((s = socket(PF_CAN, SOCK_RAW, CAN_RAW)) < 0)
@@ -27,13 +31,13 @@ Ccan::~Ccan()
 	close(s);
 }
 
-void Ccan::SetFrame(int ID, int *data){
+void Ccan::SetFrame(int ID, uint16_t *data){
 	frame.can_id = ID;
 	frame.data[0] = data[0];
 	frame.data[1] = data[1];
 }
 
-void Ccan::Write(int id, int* data)
+void Ccan::Write(int id, uint16_t* data)
 {
 	SetFrame(id,data);
 	/* ensure discrete CAN FD length values 0..8, 12, 16, 20, 24, 32, 64 */
