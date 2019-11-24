@@ -2,17 +2,19 @@
 #include <pthread.h>
 
 #include "cansend.h"
-
+#include "lib.h"
 
 #define TS 100E6 //100ms
 
 using namespace std;
 
 //-------------DECLARACIÓN DE VARIABLE GLOBAL
-uint16_t dato[2];
+uint16_t dato;
 uint16_t id;
 pthread_mutex_t cerrojo;
-Ccan Can((const char *)"vcan0");
+Ccan * Can;
+
+
 
 struct timespec operator+(struct timespec t1, struct timespec t2)
 {
@@ -36,11 +38,17 @@ void *HiloCan(void *)
 	while (1)
 	{
 		id = 1;
-		dato[0] = 2;
-		dato[1] = 0;
+		dato = 0;
+		char  trama[]="0x1#1212";
+		//strcat(trama,"0x1#1212");
 		siguiente = siguiente + intervalo;
 		pthread_mutex_lock(&cerrojo);
-		Can.Write(id, dato);
+		try{
+			Can->Write(trama);
+		}
+		catch(char const* e){
+			cout << e<< '\n';
+		}
 		pthread_mutex_unlock(&cerrojo);
 		clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &siguiente, nullptr);
 	}
@@ -55,6 +63,13 @@ void *HiloI2c(void *)
 int main()
 {
 
+	try{
+			Can = new Ccan((char *)"vcan0");
+	}
+	catch(char const* e){
+		cout <<  e<< '\n';
+	}
+
 	pthread_t h_can, h_i2c;
 
 	if (pthread_mutex_init(&cerrojo, NULL) == -1)
@@ -62,7 +77,7 @@ int main()
 
 	pthread_create(&h_can, NULL, HiloCan, 0);
 	pthread_create(&h_i2c, NULL, HiloI2c, 0);
-
+	cout << "hi" << '\n';
 	pthread_join(h_can, nullptr);
 	pthread_join(h_i2c, nullptr);
 

@@ -1,11 +1,12 @@
 #include "cansend.h"
-
-Ccan::Ccan(const char *Can_Address)
+#include <string>
+#include "lib.h"
+using namespace std;
+Ccan::Ccan(char *Can_Address)
 {
-	char * Kernel_message;
-	Kernel_message = "sudo /sbin/ip link set ";
-	strcat(Kernel_message,Can_Address);
-	strcat(Kernel_message," up type can bitrate 500000");
+	string Kernel_message =  "sudo /sbin/ip link set ";
+	Kernel_message = Kernel_message + string(Can_Address)+" up type can bitrate 500000";
+	/*---------------------ENABLE TO EXECUTE ON TERMINAL---------------------*/
 	//system(Kernel_message);
 	/* open socket */
 	if ((s = socket(PF_CAN, SOCK_RAW, CAN_RAW)) < 0)
@@ -30,15 +31,16 @@ Ccan::~Ccan()
 	close(s);
 }
 
-void Ccan::SetFrame(int ID, uint16_t *data){
-	frame.can_id = ID;
-	frame.data[0] = data[0];
-	frame.data[1] = data[1];
+void Ccan::SetFrame(int id, uint16_t data){
+	//frame.can_id = id;
+	//frame.data[0] = data;
+	//frame.data[1] = data;
 }
 
-void Ccan::Write(int id, uint16_t* data)
+void Ccan::Write(char* data)
 {
-	SetFrame(id,data);
+	//SetFrame(id,data);
+	required_mtu = parse_canframe(data, &frame);
 	/* ensure discrete CAN FD length values 0..8, 12, 16, 20, 24, 32, 64 */
 	//frame->len = can_dlc2len(can_len2dlc(frame->len));
 	/* disable default receive filter on this RAW socket */

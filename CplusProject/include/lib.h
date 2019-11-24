@@ -45,6 +45,13 @@
 #ifndef CAN_UTILS_LIB_H
 #define CAN_UTILS_LIB_H
 
+#include <string.h>
+#include <stdint.h>
+
+#include <sys/socket.h> /* for sa_family_t */
+#include "linux/can.h"
+#include "linux/can/error.h"
+
 #include <stdio.h>
 
 /* buffer sizes for CAN frame string representations */
