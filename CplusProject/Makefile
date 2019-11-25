@@ -1,26 +1,33 @@
-CC		:= g++
-C_FLAGS := -std=c++17 -Wall -Wextra -g
+CXX		:= -c++
 
-BIN		:= bin
-SRC		:= src
-INCLUDE	:= include
-LIB		:= lib
+CXXFLAGS := -pedantic-errors -Wall -Wextra -pthread
+LDFFLAGS := -L/usr/lib -lstd++ -lm
+BUILD := ./build
+OBJ_DIR := $(BUILD)/objects
+APP_DIR := $(BUILD)/apps
+TARGET := main
+HEADER := include/lib.h
+INCLUDE := -Iinclude/
+SRC_DIR := ./src
+SRC      := $(wildcard src/*.cpp)
 
-LIBRARIES	:=
+OBJECTS := $(SRC:%.cpp=$(OBJ_DIR)/%.o)
 
-ifeq ($(OS),Windows_NT)
-EXECUTABLE	:= main.exe
-else
-EXECUTABLE	:= main
-endif
-
-all: $(BIN)/$(EXECUTABLE)
-
+all: build $(APP_DIR)/$(TARGET)
+$(OBJ_DIR)/%.o: %.cpp
+	@mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ -c $<
+$(APP_DIR)/$(TARGET): $(OBJECTS)
+	@mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) $(INCLUDE) $(LDFLAGS) -o $(APP_DIR)/$(TARGET) $(OBJECTS)
+.PHONY: all build clean debug release
+build:
+	@mkdir -p $(APP_DIR)
+	@mkdir -p $(OBJ_DIR)
+debug: CXXFLAGS += -DDEBUG -g
+debug: all
+release: CXXFLAGS += -O2
+release: all
 clean:
-	$(RM) $(BIN)/$(EXECUTABLE)
-
-run: all
-	./$(BIN)/$(EXECUTABLE)
-
-$(BIN)/$(EXECUTABLE): $(SRC)/*.cpp
-	$(CC) $(C_FLAGS) -I$(INCLUDE) -L$(LIB) $^ -o $@ $(LIBRARIES)
+	-@rm -rvf $(OBJ_DIR)/*
+	-@rm -rvf $(APP_DIR)/*
