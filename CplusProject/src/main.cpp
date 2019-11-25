@@ -1,8 +1,9 @@
 #include <iostream>
 #include <pthread.h>
+#include <string>
 
 #include "cansend.h"
-#include "lib.h"
+#include "i2com.h"
 
 #define TS 100E6 //100ms
 
@@ -10,10 +11,12 @@ using namespace std;
 
 //-------------DECLARACIÓN DE VARIABLE GLOBAL
 uint16_t dato;
-uint16_t id;
+int id;
 pthread_mutex_t cerrojo;
 Ccan * Can;
-
+I2com * i2com;
+string trama_para_enviar_string;
+char* trama_para_enviar_uchar;
 
 
 struct timespec operator+(struct timespec t1, struct timespec t2)
@@ -29,6 +32,14 @@ struct timespec operator+(struct timespec t1, struct timespec t2)
 	return suma;
 }
 
+
+
+string PreparaTrama(string ID, string datos){ //Junta el id y la trama de datos para enviarla en el formato 123#3433
+	string TramaPreparada;
+	TramaPreparada = ID + "#"+datos;
+	return TramaPreparada;
+}
+
 void *HiloCan(void *)
 {
 	struct timespec inicio, siguiente, intervalo;
@@ -37,14 +48,12 @@ void *HiloCan(void *)
 	inicio = siguiente;
 	while (1)
 	{
-		id = 1;
-		dato = 0;
-		char  trama[]="0x1#1212";
-		//strcat(trama,"0x1#1212");
 		siguiente = siguiente + intervalo;
 		pthread_mutex_lock(&cerrojo);
 		try{
-			Can->Write(trama);
+			//strcpy( static_cast <char*>( trama_para_enviar_uchar ), trama_para_enviar_string );
+			trama_para_enviar_uchar = (char*)trama_para_enviar_string.data();
+			Can->Write(trama_para_enviar_uchar);
 		}
 		catch(char const* e){
 			cout << e<< '\n';
@@ -57,6 +66,18 @@ void *HiloCan(void *)
 void *HiloI2c(void *)
 {
 	//TODO
+	static unsigned char read_value;
+	try{
+		read_value = i2com->read_bus(2); //reads 2 bytes
+	}
+	catch(char const* e){
+		cout << e<< '\n';
+	}
+
+	pthread_mutex_lock(&cerrojo);
+	id = 2;
+	trama_para_enviar_string = PreparaTrama(to_string(id),to_string(read_value));
+	pthread_mutex_unlock(&cerrojo);
 	return nullptr;
 }
 
@@ -65,6 +86,12 @@ int main()
 
 	try{
 			Can = new Ccan((char *)"vcan0");
+	}
+	catch(char const* e){
+		cout <<  e<< '\n';
+	}
+	try{
+			i2com = new I2com((char *)"/dev/i2c-1",40);//Confirmar la dirección
 	}
 	catch(char const* e){
 		cout <<  e<< '\n';

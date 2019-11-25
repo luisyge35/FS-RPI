@@ -41,7 +41,8 @@
  * Send feedback to <linux-can@vger.kernel.org>
  *
  */
-
+#ifndef _CANSEND_PUNTO_H_
+#define _CANSEND_PUNTO_H_
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -59,7 +60,7 @@
 #include "linux/can.h"
 #include "linux/can/raw.h"
 
-#include "lib.h"
+
 class Ccan
 {
 protected:
@@ -77,3 +78,5 @@ public:
     ~Ccan();
     void Write(char*);
 };
+
+#endif
