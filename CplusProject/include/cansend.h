@@ -77,6 +77,8 @@ public:
     Ccan(char*);
     ~Ccan();
     void Write(char*);
+    void Connect(char *);
+    void VirtualConnect(char * );
 };
 
 #endif

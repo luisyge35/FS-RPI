@@ -108,10 +108,24 @@ int parse_canframe(char *cs, struct canfd_frame *cf) {
 using namespace std;
 Ccan::Ccan(char *Can_Address)
 {
+
+}
+
+Ccan::~Ccan()
+{
+	close(s);
+}
+
+void Ccan::SetFrame(int id, uint16_t data){
+	//frame.can_id = id;
+	//frame.data[0] = data;
+	//frame.data[1] = data;
+}
+void Ccan::Connect(char * Can_Address){
 	string Kernel_message =  "sudo /sbin/ip link set ";
 	Kernel_message = Kernel_message + string(Can_Address)+" up type can bitrate 500000";
 	/*---------------------ENABLE TO EXECUTE ON TERMINAL---------------------*/
-	//system(Kernel_message);
+	system(Kernel_message);
 	/* open socket */
 	if ((s = socket(PF_CAN, SOCK_RAW, CAN_RAW)) < 0)
 	{
@@ -130,16 +144,29 @@ Ccan::Ccan(char *Can_Address)
 	addr.can_ifindex = ifr.ifr_ifindex;
 }
 
-Ccan::~Ccan()
-{
-	close(s);
+void Ccan::VirtualConnect(){
+	system("sudo mobprobe vcan");
+	system("sudo ip link add dev vcan0 type vcan");
+	system("sudo ip link set up vcan0");
+
+	/* open socket */
+	if ((s = socket(PF_CAN, SOCK_RAW, CAN_RAW)) < 0)
+	{
+		throw("Error opening socket");
+	}
+	strncpy(ifr.ifr_name,"vcan0", IFNAMSIZ - 1);
+	ifr.ifr_name[IFNAMSIZ - 1] = '\0';
+	ifr.ifr_ifindex = if_nametoindex(ifr.ifr_name);
+	if (!ifr.ifr_ifindex)
+	{
+		throw("Error in if_nametoindex");
+	}
+
+	memset(&addr, 0, sizeof(addr));
+	addr.can_family = AF_CAN;
+	addr.can_ifindex = ifr.ifr_ifindex;
 }
 
-void Ccan::SetFrame(int id, uint16_t data){
-	//frame.can_id = id;
-	//frame.data[0] = data;
-	//frame.data[1] = data;
-}
 
 void Ccan::Write(char* data)
 {
