@@ -1,7 +1,11 @@
-/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
+/* SPDX-License-Identifier: ((GPL-2.0-only WITH Linux-syscall-note) OR BSD-3-Clause) */
 /*
- * cansend.c - simple command line tool to send CAN-frames via CAN_RAW sockets
+ * linux/can/raw.h
  *
+ * Definitions for raw CAN sockets
+ *
+ * Authors: Oliver Hartkopp <oliver.hartkopp@volkswagen.de>
+ *          Urs Thuermann   <urs.thuermann@volkswagen.de>
  * Copyright (c) 2002-2007 Volkswagen Group Electronic Research
  * All rights reserved.
  *
@@ -37,51 +41,24 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
- *
- * Send feedback to <linux-can@vger.kernel.org>
- *
  */
-#ifndef _CANSEND_PUNTO_H_
-#define _CANSEND_PUNTO_H_
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 
-#include <string>
+#ifndef _UAPI_CAN_RAW_H
+#define _UAPI_CAN_RAW_H
 
-#include <stdint.h>
+#include <linux/can.h>
 
-#include <net/if.h>
-#include <sys/ioctl.h>
-#include <sys/socket.h>
+#define SOL_CAN_RAW (SOL_CAN_BASE + CAN_RAW)
 
+/* for socket options affecting the socket (not the global system) */
 
-#include "linux/can.h"
-#include "linux/can/raw.h"
-
-
-class Ccan
-{
-protected:
-    int s; /* can raw socket */
-    int required_mtu;
-    int mtu;
-    int enable_canfd = 1;
-    struct sockaddr_can addr;
-    struct canfd_frame frame;
-    struct ifreq ifr;
-    void SetFrame(int, uint16_t);
-
-public:
-    Ccan(char*);
-    ~Ccan();
-    void Write(char*);
-<<<<<<< HEAD
-    void Connect(char *);
-    void VirtualConnect(char * );
-=======
->>>>>>> c52fe6d333f296f2c6595065b17bb7aa422697a8
+enum {
+	CAN_RAW_FILTER = 1,	/* set 0 .. n can_filter(s)          */
+	CAN_RAW_ERR_FILTER,	/* set filter for error frames       */
+	CAN_RAW_LOOPBACK,	/* local loopback (default:on)       */
+	CAN_RAW_RECV_OWN_MSGS,	/* receive my own msgs (default:off) */
+	CAN_RAW_FD_FRAMES,	/* allow CAN FD frames (default:off) */
+	CAN_RAW_JOIN_FILTERS,	/* all filters must match to trigger */
 };
 
-#endif
+#endif /* !_UAPI_CAN_RAW_H */
