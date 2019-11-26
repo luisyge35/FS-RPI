@@ -1,10 +1,9 @@
 #include "cansend.h"
 #include <string>
-
+#include <iostream>
 /* FUNCIONES DE LIB.H*/
 #define CANID_DELIM '#'
 #define DATA_SEPERATOR '.'
-
 using namespace std;
 unsigned char asc2nibble(char c) {
 

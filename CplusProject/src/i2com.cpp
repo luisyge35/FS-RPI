@@ -1,14 +1,14 @@
 #include "i2com.h"
-
-
-#include <unistd.h>				//Needed for I2C port
-#include <fcntl.h>				//Needed for I2C port
-#include <sys/ioctl.h>			//Needed for I2C port
-#include <linux/i2c-dev.h>		//Needed for I2C port
-
 #include <iostream>
-I2com::I2com(char * file_name, int address){
-
+#include <stdlib.h>
+#include <string.h>
+using namespace std;
+I2com::I2com(bool Virtual = true, char * file_name = (char *)"/dev/i2c-1", int address= 40){
+  if(Virtual){
+    VirtualConnect(file_name,address);
+    isVirtual = Virtual;
+  }
+  else{Connect(file_name,address);}
 }
 
 I2com::~I2com(){
@@ -36,7 +36,13 @@ void I2com::VirtualConnect(char * file_name, int address){
 }
 
 
-unsigned char I2com::read_bus(int bytes_to_read){
+unsigned char* I2com::read_bus(int bytes_to_read){
+  if(isVirtual){
+    static int new_i;
+    strcpy((char*)buffer, "ABFF");
+    return buffer;
+
+  }
   length = bytes_to_read;			//<<< Number of bytes to read. 2 by default
 	if (read(file_i2c, buffer, length) != length)		//read() returns the number of bytes actually read, if it doesn't match then an error occurred (e.g. no response from the device)
 	{
@@ -45,7 +51,7 @@ unsigned char I2com::read_bus(int bytes_to_read){
 	}
 	else
 	{
-		return *buffer;
+		return buffer;
 	}
 }
 

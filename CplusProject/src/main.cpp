@@ -4,12 +4,13 @@
 
 #include "cansend.h"
 #include "i2com.h"
+#include "GestionTrama.h"
 
-#define TS 100E6 //100ms
-
+#define TS 100E6 //100ms CAMBIAR A E6S
 using namespace std;
 
 //-------------DECLARACIÓN DE VARIABLE GLOBAL
+const string ID_INVERSOR = "002";
 uint16_t dato;
 int id;
 pthread_mutex_t cerrojo;
@@ -34,16 +35,12 @@ struct timespec operator+(struct timespec t1, struct timespec t2)
 
 
 
-string PreparaTrama(string ID, string datos){ //Junta el id y la trama de datos para enviarla en el formato 123#3433
-	string TramaPreparada;
-	TramaPreparada = ID + "#"+datos;
-	return TramaPreparada;
-}
 
 void *HiloCan(void *)
 {
 	struct timespec inicio, siguiente, intervalo;
 	intervalo.tv_nsec = TS;
+	intervalo.tv_sec =1;
 	clock_gettime(CLOCK_REALTIME, &siguiente);
 	inicio = siguiente;
 	while (1)
@@ -51,10 +48,7 @@ void *HiloCan(void *)
 		siguiente = siguiente + intervalo;
 		pthread_mutex_lock(&cerrojo);
 		try{
-			//strcpy( static_cast <char*>( trama_para_enviar_uchar ), trama_para_enviar_string );
-			//trama_para_enviar_uchar = (char*)trama_para_enviar_string.data();
-			trama_para_enviar_uchar = (char*)"123#123";
-			cout << trama_para_enviar_uchar<< '\n';
+			trama_para_enviar_uchar = (char*)trama_para_enviar_string.data();
 			Can->Write(trama_para_enviar_uchar);
 		}
 		catch(char const* e){
@@ -67,20 +61,18 @@ void *HiloCan(void *)
 
 void *HiloI2c(void *)
 {
-	//TODO
-	static unsigned char read_value;
-	try{
-		read_value = i2com->read_bus(2); //reads 2 bytes
+	while(1){
+		static unsigned char* read_value;
+		try{
+			read_value = i2com->read_bus(2); //reads 2 bytes
+		}
+		catch(char const* e){
+			cout << e<< '\n';
+		}
+		pthread_mutex_lock(&cerrojo);
+		trama_para_enviar_string = PreparaTrama(ID_INVERSOR,read_value);
+		pthread_mutex_unlock(&cerrojo);
 	}
-	catch(char const* e){
-		cout << e<< '\n';
-	}
-	read_value = '123#123';
-	pthread_mutex_lock(&cerrojo);
-	id = 2;
-	trama_para_enviar_string = PreparaTrama(to_string(id),to_string(read_value));
-	pthread_mutex_unlock(&cerrojo);
-	return nullptr;
 }
 
 int main()
@@ -92,7 +84,7 @@ int main()
 	catch(char const* e){
 		cout <<  e<< '\n';
 	}
-	i2com = new I2com((char *)"/dev/i2c-1",40);//Confirmar la dirección
+	i2com = new I2com(true,(char *)"/dev/i2c-1",40);//Confirmar la dirección
 	try{
 			i2com->VirtualConnect((char *)"/dev/i2c-1",40);
 	}
@@ -107,7 +99,7 @@ int main()
 
 	pthread_create(&h_can, NULL, HiloCan, 0);
 	pthread_create(&h_i2c, NULL, HiloI2c, 0);
-	cout << "hi" << '\n';
+
 	pthread_join(h_can, nullptr);
 	pthread_join(h_i2c, nullptr);
 
