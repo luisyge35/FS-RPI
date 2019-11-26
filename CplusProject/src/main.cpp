@@ -11,7 +11,7 @@ using namespace std;
 
 //-------------DECLARACIÓN DE VARIABLE GLOBAL
 uint16_t dato;
-int id;
+string id = "002";
 pthread_mutex_t cerrojo;
 Ccan * Can;
 I2com * i2com;
@@ -51,9 +51,9 @@ void *HiloCan(void *)
 		siguiente = siguiente + intervalo;
 		pthread_mutex_lock(&cerrojo);
 		try{
-			//strcpy( static_cast <char*>( trama_para_enviar_uchar ), trama_para_enviar_string );
+			trama_para_enviar_string = PreparaTrama(id,"1233");
 			trama_para_enviar_uchar = (char*)trama_para_enviar_string.data();
-			Can->Write(trama_para_enviar_uchar);
+			Can->Write(trama_para_enviar_uchar); //El id tiene que tener 3 cifras y los datos 4
 		}
 		catch(char const* e){
 			cout << e<< '\n';
@@ -75,8 +75,7 @@ void *HiloI2c(void *)
 	}
 
 	pthread_mutex_lock(&cerrojo);
-	id = 2;
-	trama_para_enviar_string = PreparaTrama(to_string(id),to_string(read_value));
+	trama_para_enviar_string = PreparaTrama(id,"1234");
 	pthread_mutex_unlock(&cerrojo);
 	return nullptr;
 }
@@ -90,12 +89,14 @@ int main()
 	catch(char const* e){
 		cout <<  e<< '\n';
 	}
+	/*
 	try{
 			i2com = new I2com((char *)"/dev/i2c-1",40);//Confirmar la dirección
 	}
 	catch(char const* e){
 		cout <<  e<< '\n';
 	}
+	*/
 
 	pthread_t h_can, h_i2c;
 
@@ -103,10 +104,10 @@ int main()
 		throw("Error al crear el mutex");
 
 	pthread_create(&h_can, NULL, HiloCan, 0);
-	pthread_create(&h_i2c, NULL, HiloI2c, 0);
-	cout << "hi" << '\n';
+	//pthread_create(&h_i2c, NULL, HiloI2c, 0);
+
 	pthread_join(h_can, nullptr);
-	pthread_join(h_i2c, nullptr);
+	//pthread_join(h_i2c, nullptr);
 
 	return 0;
 }
