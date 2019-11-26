@@ -74,14 +74,12 @@ protected:
     void SetFrame(int, uint16_t);
 
 public:
-    Ccan(char*);
+    Ccan(bool,char*);
     ~Ccan();
     void Write(char*);
-<<<<<<< HEAD
+
     void Connect(char *);
-    void VirtualConnect(char * );
-=======
->>>>>>> c52fe6d333f296f2c6595065b17bb7aa422697a8
+    void VirtualConnect();
 };
 
 #endif

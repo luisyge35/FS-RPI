@@ -5,6 +5,7 @@
 #define CANID_DELIM '#'
 #define DATA_SEPERATOR '.'
 
+using namespace std;
 unsigned char asc2nibble(char c) {
 
 	if ((c >= '0') && (c <= '9'))
@@ -102,14 +103,10 @@ int parse_canframe(char *cs, struct canfd_frame *cf) {
 }
 
 
-
-
-
-using namespace std;
-Ccan::Ccan(char *Can_Address)
+Ccan::Ccan(bool Virtual = true,char *Can_Address = (char*)"vcan0")
 {
-<<<<<<< HEAD
-
+	if (Virtual) {VirtualConnect();}
+	else{Connect(Can_Address);}
 }
 
 Ccan::~Ccan()
@@ -117,22 +114,12 @@ Ccan::~Ccan()
 	close(s);
 }
 
-void Ccan::SetFrame(int id, uint16_t data){
-	//frame.can_id = id;
-	//frame.data[0] = data;
-	//frame.data[1] = data;
-}
+
 void Ccan::Connect(char * Can_Address){
 	string Kernel_message =  "sudo /sbin/ip link set ";
 	Kernel_message = Kernel_message + string(Can_Address)+" up type can bitrate 500000";
 	/*---------------------ENABLE TO EXECUTE ON TERMINAL---------------------*/
-	system(Kernel_message);
-=======
-	string Kernel_message =  "sudo /sbin/ip link set ";
-	Kernel_message = Kernel_message + string(Can_Address)+" up type can bitrate 500000";
-	/*---------------------ENABLE TO EXECUTE ON TERMINAL---------------------*/
-	//system(Kernel_message);
->>>>>>> c52fe6d333f296f2c6595065b17bb7aa422697a8
+	system((char*)Kernel_message.data());
 	/* open socket */
 	if ((s = socket(PF_CAN, SOCK_RAW, CAN_RAW)) < 0)
 	{
@@ -151,9 +138,8 @@ void Ccan::Connect(char * Can_Address){
 	addr.can_ifindex = ifr.ifr_ifindex;
 }
 
-<<<<<<< HEAD
 void Ccan::VirtualConnect(){
-	system("sudo mobprobe vcan");
+	system("sudo modprobe vcan");
 	system("sudo ip link add dev vcan0 type vcan");
 	system("sudo ip link set up vcan0");
 
@@ -175,29 +161,10 @@ void Ccan::VirtualConnect(){
 	addr.can_ifindex = ifr.ifr_ifindex;
 }
 
-=======
-Ccan::~Ccan()
-{
-	close(s);
-}
-
-void Ccan::SetFrame(int id, uint16_t data){
-	//frame.can_id = id;
-	//frame.data[0] = data;
-	//frame.data[1] = data;
-}
->>>>>>> c52fe6d333f296f2c6595065b17bb7aa422697a8
-
 void Ccan::Write(char* data)
 {
-	//SetFrame(id,data);
 	required_mtu = parse_canframe(data, &frame);
-	/* ensure discrete CAN FD length values 0..8, 12, 16, 20, 24, 32, 64 */
-	//frame->len = can_dlc2len(can_len2dlc(frame->len));
-	/* disable default receive filter on this RAW socket */
-	/* This is obsolete as we do not read from the socket at all, but for */
-	/* this reason we can remove the receive list in the Kernel to save a */
-	/* little (really a very little!) CPU usage.                          */
+
 	setsockopt(s, SOL_CAN_RAW, CAN_RAW_FILTER, NULL, 0);
 
 	if (bind(s, (struct sockaddr *)&addr, sizeof(addr)) < 0)
@@ -207,6 +174,6 @@ void Ccan::Write(char* data)
 	/* send frame */
 	if (write(s, &frame, required_mtu) != required_mtu)
 	{
-		throw("Error in the writing");
+		throw("CAN BUS ERROR:\tError in the writing");
 	}
 }

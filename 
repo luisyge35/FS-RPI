@@ -1,0 +1,86 @@
+[33mcommit 2eab7ec1bb3dadf6a71781c97ee34c2bf150cd1f[m[33m ([m[1;36mHEAD -> [m[1;32mv1.1[m[33m, [m[1;31morigin/v1.1[m[33m)[m
+Author: Dani <danigarciape@gmail.com>
+Date:   Mon Nov 25 07:30:21 2019 -0800
+
+    Código i2c y can listo
+
+[33mcommit 290fec7fb1e40c11a9cd6168e8d6ac90cdd47a8e[m
+Author: Dani <danigarciape@gmail.com>
+Date:   Sun Nov 24 03:58:22 2019 -0800
+
+    No reconoce parse_frame. Hay que buscar una forma de incluir la libreria lib.h
+
+[33mcommit 71951c4a988948abc4f3895d6b1d088946c55fb2[m
+Author: Dani <danigarciape@gmail.com>
+Date:   Fri Nov 22 07:11:15 2019 -0800
+
+    Segmentation Fault
+
+[33mcommit 67086d67d0ced92ab8b9d7811189b83cbd224cf8[m
+Author: Dani <danigarciape@gmail.com>
+Date:   Fri Nov 22 05:37:08 2019 -0800
+
+    No errors. Falta por configurar el makefile
+
+[33mcommit cffe22784a7130de4c1c20c6e399acc8ff090aa6[m
+Author: Dani <danigarciape@gmail.com>
+Date:   Thu Nov 21 01:35:09 2019 -0800
+
+    Sin Fallos
+
+[33mcommit a9707eb704229547caf7fb4f628f139c58d389b3[m
+Author: Dani <danigarciape@gmail.com>
+Date:   Wed Nov 20 13:25:45 2019 -0800
+
+    Makefile funcionando. Error de compilación en candsend.cpp
+
+[33mcommit 2bc349eeca4e8923dcdf8fac3db3f3b070b22260[m
+Author: Daniel Garcia <danigarciape@gmail.com>
+Date:   Wed Nov 20 21:48:16 2019 +0100
+
+    1
+
+[33mcommit a5f3842f97e2e7c102fe3268e1dbf6a286bdcb94[m
+Author: Daniel Garcia <danigarciape@gmail.com>
+Date:   Wed Nov 20 20:52:51 2019 +0100
+
+    Código de Can
+
+[33mcommit 9e2de93753eba6623cd9dda4921fb3c5039c70b5[m
+Author: Daniel Garcia <danigarciape@gmail.com>
+Date:   Wed Nov 20 11:36:34 2019 +0100
+
+    1
+
+[33mcommit 533d9b52293f26c5debdb59f339ad1c66b1ec0e0[m
+Author: Daniel Garcia <danigarciape@gmail.com>
+Date:   Wed Nov 20 11:20:45 2019 +0100
+
+    Se dividen los archivos en dos proyectos, uno en python y otro en c. Ya están las plantillas para comunicación CAN e I2C para c
+
+[33mcommit 73c8fdcd7f2c8ea660aded895b13d37edd23a474[m
+Author: Daniel Garcia <danigarciape@gmail.com>
+Date:   Tue Nov 19 16:15:28 2019 +0100
+
+    Añadí la comunicación serie usando smbus. Primera aproximación
+
+[33mcommit 839284e6e2272c0efb97717613cb5eec83fa2020[m
+Author: Daniel Garcia <danigarciape@gmail.com>
+Date:   Tue Nov 19 15:01:38 2019 +0100
+
+    V1
+
+[33mcommit 825ee1ea47c4390e68f958e18e1f54a69c50de04[m
+Author: Daniel García <50992677+danigarci1@users.noreply.github.com>
+Date:   Tue Nov 19 14:20:38 2019 +0100
+
+    Primera versión
+    
+    Primera versión realizada en python.
+    Se utiliza arduino para recoger los valores analógicos.
+
+[33mcommit a984aa04755b9690d3db35e3eb435e2fcad6f9e9[m
+Author: Daniel García <50992677+danigarci1@users.noreply.github.com>
+Date:   Tue Nov 19 14:18:43 2019 +0100
+
+    Initial commit

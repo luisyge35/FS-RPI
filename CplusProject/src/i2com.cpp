@@ -8,6 +8,13 @@
 
 #include <iostream>
 I2com::I2com(char * file_name, int address){
+
+}
+
+I2com::~I2com(){
+
+}
+void I2com::Connect(char * file_name, int address){
   //----- OPEN THE I2C BUS -----
   char *filename = (char*) file_name; //"/dev/i2c-1";
   if ((file_i2c = open(filename, O_RDWR)) < 0)
@@ -24,7 +31,7 @@ I2com::I2com(char * file_name, int address){
   }
 }
 
-I2com::~I2com(){
+void I2com::VirtualConnect(char * file_name, int address){
 
 }
 

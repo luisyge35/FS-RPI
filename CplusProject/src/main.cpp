@@ -52,7 +52,9 @@ void *HiloCan(void *)
 		pthread_mutex_lock(&cerrojo);
 		try{
 			//strcpy( static_cast <char*>( trama_para_enviar_uchar ), trama_para_enviar_string );
-			trama_para_enviar_uchar = (char*)trama_para_enviar_string.data();
+			//trama_para_enviar_uchar = (char*)trama_para_enviar_string.data();
+			trama_para_enviar_uchar = (char*)"123#123";
+			cout << trama_para_enviar_uchar<< '\n';
 			Can->Write(trama_para_enviar_uchar);
 		}
 		catch(char const* e){
@@ -73,7 +75,7 @@ void *HiloI2c(void *)
 	catch(char const* e){
 		cout << e<< '\n';
 	}
-
+	read_value = '123#123';
 	pthread_mutex_lock(&cerrojo);
 	id = 2;
 	trama_para_enviar_string = PreparaTrama(to_string(id),to_string(read_value));
@@ -85,13 +87,14 @@ int main()
 {
 
 	try{
-			Can = new Ccan((char *)"vcan0");
+			Can = new Ccan(true,(char *)"vcan0");
 	}
 	catch(char const* e){
 		cout <<  e<< '\n';
 	}
+	i2com = new I2com((char *)"/dev/i2c-1",40);//Confirmar la dirección
 	try{
-			i2com = new I2com((char *)"/dev/i2c-1",40);//Confirmar la dirección
+			i2com->VirtualConnect((char *)"/dev/i2c-1",40);
 	}
 	catch(char const* e){
 		cout <<  e<< '\n';

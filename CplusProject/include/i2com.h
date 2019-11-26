@@ -13,6 +13,8 @@ public:
   ~I2com();
   unsigned char read_bus(int);
   void write_bus(int,int);
+  void Connect(char*, int);
+  void VirtualConnect(char*, int);
 };
 
 #endif
