@@ -10,7 +10,7 @@ class I2com{
 protected:
   int file_i2c;
   int length;
-  unsigned char buffer[60] = {0};
+  unsigned char buffer[4] = {0};
   bool isVirtual;
 
 public:
